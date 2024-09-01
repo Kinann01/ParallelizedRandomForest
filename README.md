@@ -1,1 +1,1 @@
-# ParallelizedRandomForest
+# Parallelized Random Forest
