@@ -71,6 +71,32 @@ git clone https://github.com/Kinann01/ParallelizedRandomForest
 
 - Then you will have to import the project into your solution and add a reference to it. 
 
+- The constructor of the DecisionTree class is simply as follows:
+
+```C#
+public Tree(int? maxDepth);
+```
+
+- The parameter is as follows:
+
+1. **maxDepth**: The maximum depth of the decision tree. If null, the tree is grown until the data at leaf nodes is pure.
+
+
+- The constructor of the RandomForest class are as follows:
+
+```C#
+public RandomForest(int numberOfTrees, bool bagging, int? maxDepth); 
+```
+
+- The parameters are as follows:
+
+1. **numberOfTrees**: The number of decision trees to grow in the random forest.
+
+2. **bagging**: A boolean value indicating whether to use bagging (bootstrap aggregating) to train each tree. If true, each tree is trained on a bootstrapped sample of the data. Else, each tree is trained on the full data.
+
+3. **maxDepth**: The maximum depth of each decision tree. If null, the tree is grown until the data at leaf nodes is pure.
+
+
 - You can then use the RandomForest class in your code. Here is an example of how to use the RandomForest class:
 
 ```C#
