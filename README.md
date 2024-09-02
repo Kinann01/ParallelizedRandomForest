@@ -2,13 +2,15 @@
 
 ### Overview
 
-- This project implements a Parallelized Random Forest classifier in C#. The classifier uses decision trees as its base learners and aggregates their predictions to make final predictions. The goal is to efficiently train and predict with multiple decision trees. We take advantage of the parallel computing to improve efficiency. The parallelization is achieved through a custom thread pool implementation that allows for efficient task scheduling and execution. The project acts as a library for users to import and use. The main two general methods are `Fit` and `Predict`. An example will be provieded later. Moreover the implementation is done in a way where simply decision trees can be also imported and used separately, also using `Tree.fit` and `Tree.predict` methods instead of `RandomForest.fit` and `RandomForest.predict`.
+- This project implements a Parallelized Random Forest classifier in C#. The classifier uses decision trees as its base learners and aggregates their predictions to make final predictions. The goal is to efficiently train and predict with multiple decision trees. We take advantage of the parallel computing to improve efficiency. The parallelization is achieved through a custom thread pool implementation that allows for efficient task scheduling and execution. The project acts as a library for users to import and use. The main two usage methods are `Fit` and `Predict`. An example will be provieded later. 
+
+- Moreover the implementation is done in a way where simply decision trees can also be imported and used. This is done as both the `Decision Tree` class and the `Random Forest` class extend an `IModel` interface. This interface has two methods, `Fit` and `Predict`.
 
 ### Key Features
 
-- Random Forest Classifier: An ensemble method that combines multiple decision tres to enhance predictive accuracy and control overfitting of the model.
+- Random Forest Classifier: An ensemble method that combines multiple decision tres to improve predictive accuracy and control overfitting of the model.
 
-- Decision Trees: Since decision trees are the building blocks of the random forest, they are also implemented as part of the project. The trees are grown to a maximum depth or until they can't be split further.
+- Decision Trees: Since decision trees are the building blocks of the random forest, they are also implemented as part of the project. The trees are grown to a maximum depth if specified or until the data at a node is pure.
 
 - BestSplit Method: A critical function that determines the optimal feature and threshold for splitting the data at each node in the tree.
 
@@ -25,17 +27,17 @@ The most important part is the `BestSplit` method. The `BestSplit` method ensure
 
 2. **Midpoint Calculation**: For each selected feature, unique sorted values are considered, and midpoints between these values are calculated as potential split points. We take unique midpoints to minimize the number of potential splits.
 
-3. **Criterion Calculation**: For each potential split, the method calculates a criterion, in our case the entropy, to measure how well the split separates the data. The goal is to minimize this criterion.
+3. **Criterion Calculation**: For each potential split, the method calculates a criterion, in our case the `entropy`, to measure how well the split separates the data. The goal is to minimize this criterion.
 
 4. **Best Split Determination**: The feature and value combination that provides the lowest criterion is chosen as the best split, and the data is divided into left and right subsets accordingly.
 
 ### Custom Thread Pool 
 
-A custom thread pool is implemented to handle parallel execution of tasks efficiently. The thread pool design pattern is used to manage a pool of threads that execute tasks concurrently. Here is how it works: 
+A custom thread pool is implemented to handle parallel execution of tasks efficiently. The thread pool is used to manage a pool of threads that execute tasks concurrently. Here is how it works: 
 
 1. **Task Queue** : Tasks (in this case, training a tree or predicting with a tree) are enqueued into a task queue.
 
-2. **Worker Threads**: A fixed number of worker threads are created at the start. These threads continuously pull tasks from the queue and execute them.
+2. **Worker Threads**: A fixed number of worker threads are created at the start. These threads continuously pull tasks from the queue and execute them. The number of threads is configured to be equivalent to the number of cores on the machine using `Environment.ProcessorCount`.
 
 3. **Task Execution**: Each thread works on a task from the queue. Once a task is completed, the thread moves on to the next task in the queue.
 
@@ -57,7 +59,7 @@ Prediction
 
 - Predict Method: The Predict method aggregates predictions from all the decision trees in the forest. The final prediction is made based on the majority vote across all trees.
 
-- Parallel Prediction: Predictions from individual trees are computed in parallel using the thread pool, enabling faster predictions, especially when the forest is large.
+- Parallel Prediction: Predictions from individual trees are computed in parallel using the thread pool.
 
 ### Installation and how to use it 
 
